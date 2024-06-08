@@ -28,7 +28,7 @@ class CustomEnvironment(gym.Env):
         self.max_steps = 1
         self.current_step = 0
         self.grav_const = 398600
-        self.tof = 3000
+        self.tof = 3232.0131611 
         """
         x_c = self.initial_pos[0]
         y_c = self.initial_pos[1]
