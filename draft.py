@@ -27,6 +27,8 @@ class CustomEnvironment(gym.Env):
         # Define maximum steps and current step count
         self.max_steps = 1
         self.current_step = 0
+        self.grav_const = 6.67408*10**(-11)
+        """
         x_c = self.initial_pos[0]
         y_c = self.initial_pos[1]
         z_c = self.initial_pos[2]
@@ -36,18 +38,20 @@ class CustomEnvironment(gym.Env):
         grav_chang = grav_const*mass_e / radius_r
         a_g = [[-x_c*grav_chang, -y_c*grav_chang, -z_c*grav_chang]]
         velocity_1 = self.initial_velocity + self.action_space +a_g
-
-
+        """
 
         # Initialize current position
-        self.current_pos = self.initial_pos.copy()
+        # self.current_pos = self.initial_pos.copy()
 
 
 
     def step(self, action):
 
         self.initial_velocity += self.action_space.sample()
-        self.current_pos += self.initial_velocity
+        #self.current_pos += self.initial_velocity
+
+        [final_position,final_velocity] = vallado(k = self.grav_const,r0 = self.initial_pos,v0 = self.initial_velocity,tof = temp_tof, numiter = 100)
+        
         distance_to_target = np.linalg.norm(self.current_pos - self.target_pos)
         change_in_actions = np.sum(np.abs(action))
         reward = 1/(1 + distance_to_target) + 1/(1 + change_in_actions)
