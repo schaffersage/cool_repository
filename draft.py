@@ -48,10 +48,12 @@ class CustomEnvironment(gym.Env):
 
     def step(self, action):
 
-        self.initial_velocity += self.action_space.sample()
+        #self.initial_velocity += self.action_space.sample()
+        self.initial_velocity += action
         #self.current_pos += self.initial_velocity
 
-        [final_position,final_velocity] = vallado(k = self.grav_const,r0 = self.initial_pos,v0 = self.initial_velocity,tof = self.tof, numiter = 10)
+        [self.current_pos,final_velocity] = vallado(k = self.grav_const,r0 = self.initial_pos,v0 = self.initial_velocity,tof = self.tof, numiter = 10)
+        
         
         distance_to_target = np.linalg.norm(self.current_pos - self.target_pos)
         change_in_actions = np.sum(np.abs(action))
