@@ -7,12 +7,12 @@ from propagation import vallado as vallado_fast
 from special import stumpff_c2 as c2, stumpff_c3 as c3
 
 
-class CustomEnvironment(gym.Env):
+class Hohnmann_TransferEnv(gym.Env):
     # where should I put this line of code?
     # [r[i],v[i]] = vallado(k = gravitation_constant,r0 = init_r,v0 = init_v,tof = temp_tof, numiter = iterations)
     # tof calculated to be 3232.0131611 seconds
     def __init__(self):
-        super(CustomEnvironment, self).__init__()
+        super(Hohmann_TransferEnv, self).__init__()
 
         # Define action space: [-540, 540] for each of the three directions
         self.action_space = spaces.Box(low=-9.0, high=9.0, shape=(3,), dtype=np.float32)
@@ -70,9 +70,3 @@ class CustomEnvironment(gym.Env):
         self.pos
         return self.current_pos
 
-    # excuting the code is tripping me up :.)
-    # in the example code they used
-    while True:
-        __init__(self)
-        step(self, action)
-        reset(self)
