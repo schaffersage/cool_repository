@@ -63,10 +63,9 @@ class Hohnmann_TransferEnv(gym.Env):
 
         return self.current_pos, reward, done, {}
 
-    def reset(self):
+    def reset(self, seed = None, options = None):
         self.current_step = 0
         self.initial_pos = np.array([0.0, 0.0, 7000.0])
         self.initial_velocity = np.array([-7.546066877, 0, 0])
-        self.pos
         return self.current_pos
 
