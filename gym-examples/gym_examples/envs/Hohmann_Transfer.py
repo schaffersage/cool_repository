@@ -3,16 +3,17 @@ from gymnasium import spaces
 import numpy as np
 import math
 from vallado import vallado
+'''
 from propagation import vallado as vallado_fast
 from special import stumpff_c2 as c2, stumpff_c3 as c3
+'''
 
-
-class Hohnmann_TransferEnv(gym.Env):
+class HohmannTransferEnv(gym.Env):
     # where should I put this line of code?
     # [r[i],v[i]] = vallado(k = gravitation_constant,r0 = init_r,v0 = init_v,tof = temp_tof, numiter = iterations)
     # tof calculated to be 3232.0131611 seconds
     def __init__(self):
-        super(Hohmann_TransferEnv, self).__init__()
+        super().__init__()
 
         # Define action space: [-540, 540] for each of the three directions
         self.action_space = spaces.Box(low=-9.0, high=9.0, shape=(3,), dtype=np.float32)
@@ -50,9 +51,9 @@ class Hohnmann_TransferEnv(gym.Env):
         self.initial_velocity += action
         # self.current_pos += self.initial_velocity
 
-        [self.current_pos, self.initial_velocity] = vallado(k=self.grav_const, r0=self.initial_pos, v0=self.initial_velocity,
-                                                     tof=self.tof, numiter=10)
-
+        [self.current_pos, self.initial_velocity] = vallado(k=self.grav_const, r0=self.initial_pos,
+                                                            v0=self.initial_velocity,
+                                                            tof=self.tof, numiter=10)
         distance_to_target = np.linalg.norm(self.current_pos - self.target_pos)
         change_in_actions = np.sum(np.abs(action))
         reward = 1 / (1 + distance_to_target) + 1 / (1 + change_in_actions)
@@ -63,9 +64,8 @@ class Hohnmann_TransferEnv(gym.Env):
 
         return self.current_pos, reward, done, {}
 
-    def reset(self, seed = None, options = None):
+    def reset(self, seed=None, options=None):
         self.current_step = 0
         self.initial_pos = np.array([0.0, 0.0, 7000.0])
         self.initial_velocity = np.array([-7.546066877, 0, 0])
         return self.current_pos
-
