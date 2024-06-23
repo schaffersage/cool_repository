@@ -8,10 +8,10 @@ env_train = gym.make("Hohmann_Transfer-v0")
 observation, info = env_train.reset()
 #restarts env
 
-model = SAC('MlpPolicy', env_train, learning_rate=1e-3, verbose=1)
+model = SAC('MlpPolicy', env_train, learning_rate=1e-2, verbose=1)
 # Train the agent
 print("starting training")
-model.learn(total_timesteps=int(100))
+model.learn(total_timesteps=int(1e5))
 # Show the points getting closer
 env_train.close()
 

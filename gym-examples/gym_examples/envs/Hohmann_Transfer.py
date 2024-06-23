@@ -16,7 +16,7 @@ class HohmannTransferEnv(gym.Env):
         super().__init__()
 
         # Define action space: [-540, 540] for each of the three directions
-        self.action_space = spaces.Box(low=-1.0, high=2.0, shape=(3,), dtype=np.float32)
+        self.action_space = spaces.Box(low=-2.0, high=2.0, shape=(3,), dtype=np.float32)
 
         # Define observation space for the current position
         self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(3,), dtype=np.float32)
@@ -57,25 +57,35 @@ class HohmannTransferEnv(gym.Env):
                                                                 v0=self.initial_velocity,
                                                                 tof=self.tof, numiter=10)
             distance_to_target = np.linalg.norm(self.current_pos - self.target_pos)
-            change_in_actions = np.sum(np.abs(action))
-            reward = 1 / (1 + distance_to_target) + 1 / (1 + change_in_actions)
-            print(reward)
-            done = self.current_step >= self.max_steps
+            change_in_actions = np.linalg.norm(action)
+            reward = 1 / (1 + (distance_to_target)/1000) + 1 / (1 + (change_in_actions))
+            #print(reward)
+            # Only want 1 step!
+            done = 1
         except:
             reward = 0
             self.current_pos = self.initial_pos
             done = 1
 
-        self.current_step += 1
         if self.render_mode == "human":
                 self._render_frame()
-        return self.current_pos, reward, done, {}
+        return self.initial_velocity, reward, done, {}
+
+    def _get_obs(self):
+        return {"agent": self.current_pos, "target": self.target_pos}
+    
+    def _get_info(self):
+        return {"distance": np.linalg.norm(self.current_pos - self.target_pos, ord=1)}
 
     def reset(self, seed=None, options=None):
         self.current_step = 0
         self.initial_pos = np.array([0.0, 0.0, 7000.0])
+        self.current_pos = self.initial_pos
         self.initial_velocity = np.array([-7.546066877, 0, 0])
-        return [0,0]
+        self.target_pos = np.array([0.0, 0.0, -8000.0])
+        observation = self._get_obs()
+        info = self._get_info()
+        return self.initial_velocity, info
 
     def render(self):
             if self.render_mode == "rgb_array":
